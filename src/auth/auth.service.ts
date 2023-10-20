@@ -1,10 +1,10 @@
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  UnauthorizedException,
+  UnauthorizedException, Logger
 } from "@nestjs/common";
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -26,10 +26,11 @@ export class AuthService {
     //TODO
     // 1. social Type 맞게 각 엑세스 토큰을 확인하는 로직 필요.
     // 2. DB 체크 후 유저아이디 존재여부 확인 if(ture) -> generateToken if(false) -> 회원가입 로직
-
     const user = await this.usersService.checkUser()
+
     if (user) {
-      return await this.generateTokens({userId: accessTokenFromClient})
+      //FIXME token 생성시 DB의 userId 입력
+      return await this.generateTokens({userId: "seongwoo9823"})
     }
   }
   async OAuthLogin({ req, res }) {
@@ -76,10 +77,9 @@ export class AuthService {
     }
 
   }
-
   validateUser(userId: string): Promise<User> {
-    console.log("Check userId ::" + userId)
-    return this.prisma.user.findUnique({ where: { id: userId } });
+    Logger.log("validate user ::" , userId)
+    return this.prisma.user.findUnique({ where: { userId: userId } });
   }
 
   getUserFromToken(token: string): Promise<User> {
