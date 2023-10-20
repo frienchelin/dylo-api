@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: "frienchelin"
+      POSTGRES_PASSWORD: "frienchelin1234"
+      POSTGRES_USER: "frienchelin"
+    env_file:
+      - .env
+#    volumes:
+#      - postgres:/var/lib/postgresql/data
+    volumes:
+      - "./init/:/docker-entrypoint-initdb.d/"
+volumes:
+  postgres:
+    name: frienchelin-db
+
